@@ -6,9 +6,17 @@ namespace com.github.zehsteam.Hitmarker.Patches;
 internal class EnemyAIPatch
 {
     [HarmonyPatch("HitEnemyOnLocalClient")]
-    [HarmonyPostfix]
-    static void HitEnemyOnLocalClientPatch()
+    [HarmonyPrefix]
+    static void HitEnemyOnLocalClientPatch(ref EnemyAI __instance, int force)
     {
+        ShowHitmarker(__instance, force);
+    }
+
+    private static void ShowHitmarker(EnemyAI enemyAI, int damage)
+    {
+        if (enemyAI.isEnemyDead) return;
+
         CanvasBehaviour.Instance.ShowHitmarker();
+        CanvasBehaviour.Instance.ShowDamageText(enemyAI.enemyType.enemyName, damage);
     }
 }

@@ -20,6 +20,7 @@ public class HitmarkerBase : BaseUnityPlugin
 
     public GameObject canvasPrefab;
     public AudioClip hitSFX;
+    public GameObject damageTextPrefab;
     
     void Awake()
     {
@@ -49,6 +50,9 @@ public class HitmarkerBase : BaseUnityPlugin
             canvasPrefab.AddComponent<CanvasBehaviour>();
 
             hitSFX = (AudioClip)MainAssetBundle.LoadAsset("HitSFX");
+
+            damageTextPrefab = (GameObject)MainAssetBundle.LoadAsset("DamageText");
+            damageTextPrefab.AddComponent<DamageTextBehaviour>();
 
             mls.LogInfo("Successfully loaded assets from AssetBundle!");
         }

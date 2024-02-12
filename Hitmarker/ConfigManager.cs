@@ -5,12 +5,15 @@ namespace com.github.zehsteam.Hitmarker;
 
 internal class ConfigManager
 {
-    // Hitmarker
+    // Hitmarker Settings
     private ConfigEntry<bool> ShowHitmarkerImageCfg;
     private ConfigEntry<int> HitmarkerImageSizeCfg;
     private ConfigEntry<bool> PlayHitmarkerSoundCfg;
 
-    // Hitmarker
+    // Damage Settings
+    private ConfigEntry<bool> ShowDamageTextCfg;
+
+    // Hitmarker Settings
     internal bool ShowHitmarkerImage
     {
         get
@@ -49,6 +52,19 @@ internal class ConfigManager
         }
     }
 
+    // Damage Settings
+    internal bool ShowDamageText
+    {
+        get
+        {
+            return ShowDamageTextCfg.Value;
+        }
+        set
+        {
+            ShowDamageTextCfg.Value = value;
+        }
+    }
+
     public ConfigManager()
     {
         BindConfigs();
@@ -58,7 +74,7 @@ internal class ConfigManager
     {
         ConfigFile config = HitmarkerBase.Instance.Config;
 
-        // Hitmarker
+        // Hitmarker Settings
         ShowHitmarkerImageCfg = config.Bind(
             new ConfigDefinition("Hitmarker Settings", "showHitmarkerImage"),
             true,
@@ -75,6 +91,13 @@ internal class ConfigManager
             new ConfigDefinition("Hitmarker Settings", "playHitmarkerSound"),
             true,
             new ConfigDescription("Do you want to play the hitmarker sound?")
+        );
+
+        // Damage Settings
+        ShowDamageTextCfg = config.Bind(
+            new ConfigDefinition("Damage Settings", "showDamageText"),
+            true,
+            new ConfigDescription("Shows how much damage you did.")
         );
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ internal class CanvasBehaviour : MonoBehaviour
     public static CanvasBehaviour Instance;
 
     private Image image;
+    private Transform damageList;
 
     private void Awake()
     {
@@ -17,8 +19,10 @@ internal class CanvasBehaviour : MonoBehaviour
 
     private void Start()
     {
-        image = GetComponentInChildren<Image>();
+        image = gameObject.GetComponentInChildren<Image>();
         image.gameObject.SetActive(false);
+
+        damageList = transform.GetChild(1);
 
         SetHitmarkerImageSize(HitmarkerBase.Instance.configManager.HitmarkerImageSize);
     }
@@ -40,6 +44,15 @@ internal class CanvasBehaviour : MonoBehaviour
         {
             HUDManager.Instance.UIAudio.PlayOneShot(HitmarkerBase.Instance.hitSFX);
         }
+    }
+
+    public void ShowDamageText(string name, int damage)
+    {
+        if (!HitmarkerBase.Instance.configManager.ShowDamageText) return;
+
+        GameObject damageText = Instantiate(HitmarkerBase.Instance.damageTextPrefab, Vector3.zero, Quaternion.identity, damageList);
+        DamageTextBehaviour damageTextBehaviour = damageText.GetComponent<DamageTextBehaviour>();
+        damageTextBehaviour.SetText($"{name} -{damage} HP");
     }
 
     private IEnumerator ShowImage(float time)
