@@ -1,8 +1,9 @@
 # Hitmaker
 Shows a hitmarker when you successfully hit an enemy. (Client-side)
 
-* This mod shows how much damage you did.
-* This mod works in vanilla lobbies.
+* Shows a hitmarker when you successfully hit an enemy or player.
+* Shows how much damage you did.
+* Fully client side. (Works in vanilla lobbies)
 
 ## ![Download Icon](https://i.imgur.com/TpnrFSH.png) Download
 
