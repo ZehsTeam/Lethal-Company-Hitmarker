@@ -27,6 +27,8 @@ If you are experiencing any issues with config settings not working, try deletin
 | `onlyShowLocalKillMessage` | `Boolean` | `false` | Will only show your kill messages. |
 
 ## Bug Reports, Help, or Suggestions
+https://github.com/ZehsTeam/Lethal-Company-Hitmarker/issues
+
 | Discord server | Channel | Post |
 | ----------- | ----------- | ----------- |
 | [Lethal Company modding Discord](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [Hitmarker](https://discord.com/channels/1168655651455639582/1206033890657959946) |
