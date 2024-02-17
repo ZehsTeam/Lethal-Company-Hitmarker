@@ -46,4 +46,4 @@ https://github.com/ZehsTeam/Lethal-Company-Hitmarker/issues
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/"><img src="https://i.imgur.com/ZNcffJ7.png" width="80px"></a>
 
 ## Screenshots
-<img src="https://i.imgur.com/lX6Cuql.png" width="100%">
+<img src="https://i.imgur.com/etFLJTI.png" width="100%">
