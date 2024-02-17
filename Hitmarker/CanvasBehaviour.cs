@@ -9,7 +9,7 @@ internal class CanvasBehaviour : MonoBehaviour
     public static CanvasBehaviour Instance;
 
     private Image hitmarkerImage;
-    private Transform infoList;
+    private Transform messageList;
 
     private void Awake()
     {
@@ -21,7 +21,7 @@ internal class CanvasBehaviour : MonoBehaviour
         hitmarkerImage = transform.GetChild(0).gameObject.GetComponent<Image>();
         hitmarkerImage.gameObject.SetActive(false);
 
-        infoList = transform.GetChild(1);
+        messageList = transform.GetChild(1);
 
         SetHitmarkerImageSize(HitmarkerBase.Instance.configManager.HitmarkerImageSize);
     }
@@ -35,7 +35,7 @@ internal class CanvasBehaviour : MonoBehaviour
     {
         if (HitmarkerBase.Instance.configManager.ShowHitmarkerImage)
         {
-            StopCoroutine("ShowImage");
+            StopCoroutine("ShowHitmarkerImage");
             StartCoroutine(ShowHitmarkerImage(0.3f, killed));
         }
 
@@ -43,36 +43,6 @@ internal class CanvasBehaviour : MonoBehaviour
         {
             HUDManager.Instance.UIAudio.PlayOneShot(HitmarkerBase.Instance.hitSFX);
         }
-    }
-
-    public void ShowDamageText(string message)
-    {
-        if (!HitmarkerBase.Instance.configManager.ShowDamageMessage) return;
-
-        ShowInfoText(message);
-    }
-
-    public void ShowKillText(string message, bool fromLocalPlayer)
-    {
-        if (!HitmarkerBase.Instance.configManager.ShowKillMessage) return;
-
-        bool onlyShowLocalKillText = HitmarkerBase.Instance.configManager.OnlyShowLocalKillMessage;
-        if (onlyShowLocalKillText && !fromLocalPlayer) return;
-
-        ShowInfoText(message, Color.red);
-    }
-
-    public void ShowInfoText(string message)
-    {
-        ShowInfoText(message, Color.white);
-    }
-
-    public void ShowInfoText(string message, Color color)
-    {
-        GameObject infoText = Instantiate(HitmarkerBase.Instance.infoTextPrefab, Vector3.zero, Quaternion.identity, infoList);
-        TextBehaviour textBehaviour = infoText.GetComponent<TextBehaviour>();
-
-        textBehaviour.SetText(message, color);
     }
 
     private IEnumerator ShowHitmarkerImage(float time, bool killed)
@@ -88,5 +58,35 @@ internal class CanvasBehaviour : MonoBehaviour
 
         hitmarkerImage.gameObject.SetActive(false);
         hitmarkerImage.color = Color.white;
+    }
+
+    public void ShowDamageMessage(string message)
+    {
+        if (!HitmarkerBase.Instance.configManager.ShowDamageMessage) return;
+
+        ShowMessage(message);
+    }
+
+    public void ShowKillMessage(string message, bool fromLocalPlayer)
+    {
+        if (!HitmarkerBase.Instance.configManager.ShowKillMessage) return;
+
+        bool onlyShowLocalKillText = HitmarkerBase.Instance.configManager.OnlyShowLocalKillMessage;
+        if (onlyShowLocalKillText && !fromLocalPlayer) return;
+
+        ShowMessage(message, Color.red);
+    }
+
+    public void ShowMessage(string message)
+    {
+        ShowMessage(message, Color.white);
+    }
+
+    public void ShowMessage(string message, Color color)
+    {
+        GameObject messageText = Instantiate(HitmarkerBase.Instance.messageTextPrefab, Vector3.zero, Quaternion.identity, messageList);
+        TextBehaviour textBehaviour = messageText.GetComponent<TextBehaviour>();
+
+        textBehaviour.SetText(message, color);
     }
 }

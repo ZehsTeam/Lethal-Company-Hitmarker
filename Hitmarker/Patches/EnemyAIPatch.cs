@@ -81,17 +81,15 @@ internal class EnemyAIPatch
         if (fromLocalPlayer)
         {
             CanvasBehaviour.Instance.ShowHitmarker(killedEnemy);
-            CanvasBehaviour.Instance.ShowDamageText($"{enemyName} -{damage} HP");
+            CanvasBehaviour.Instance.ShowDamageMessage($"{enemyName} -{damage} HP");
         }
 
         if (killedEnemy)
         {
             deadEnemyIDs.Add(enemyId);
 
-            string playerUsername = fromLocalPlayer ? string.Empty : playerWhoHit.playerUsername;
-            string message = $"{playerUsername} killed {enemyName}".Trim();
-
-            CanvasBehaviour.Instance.ShowKillText(message, fromLocalPlayer);
+            string message = fromLocalPlayer ? $"Killed {enemyName}" : $"{playerWhoHit.playerUsername} Killed {enemyName}";
+            CanvasBehaviour.Instance.ShowKillMessage(message.Trim(), fromLocalPlayer);
         }
     }
 
