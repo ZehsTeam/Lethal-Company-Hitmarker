@@ -20,7 +20,7 @@ public class HitmarkerBase : BaseUnityPlugin
 
     public GameObject canvasPrefab;
     public AudioClip hitSFX;
-    public GameObject damageTextPrefab;
+    public GameObject infoTextPrefab;
     
     void Awake()
     {
@@ -30,7 +30,6 @@ public class HitmarkerBase : BaseUnityPlugin
         mls.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
         harmony.PatchAll(typeof(StartOfRoundPatch));
-        harmony.PatchAll(typeof(PlayerControllerBPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
         configManager = new ConfigManager();
@@ -51,8 +50,8 @@ public class HitmarkerBase : BaseUnityPlugin
 
             hitSFX = (AudioClip)MainAssetBundle.LoadAsset("HitSFX");
 
-            damageTextPrefab = (GameObject)MainAssetBundle.LoadAsset("DamageText");
-            damageTextPrefab.AddComponent<DamageTextBehaviour>();
+            infoTextPrefab = (GameObject)MainAssetBundle.LoadAsset("InfoText");
+            infoTextPrefab.AddComponent<TextBehaviour>();
 
             mls.LogInfo("Successfully loaded assets from AssetBundle!");
         }

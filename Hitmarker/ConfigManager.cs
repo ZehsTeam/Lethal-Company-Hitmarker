@@ -11,7 +11,9 @@ internal class ConfigManager
     private ConfigEntry<bool> PlayHitmarkerSoundCfg;
 
     // Damage Settings
-    private ConfigEntry<bool> ShowDamageTextCfg;
+    private ConfigEntry<bool> ShowDamageMessageCfg;
+    private ConfigEntry<bool> ShowKillMessageCfg;
+    private ConfigEntry<bool> OnlyShowLocalKillMessageCfg;
 
     // Hitmarker Settings
     internal bool ShowHitmarkerImage
@@ -53,15 +55,39 @@ internal class ConfigManager
     }
 
     // Damage Settings
-    internal bool ShowDamageText
+    internal bool ShowDamageMessage
     {
         get
         {
-            return ShowDamageTextCfg.Value;
+            return ShowDamageMessageCfg.Value;
         }
         set
         {
-            ShowDamageTextCfg.Value = value;
+            ShowDamageMessageCfg.Value = value;
+        }
+    }
+
+    internal bool ShowKillMessage
+    {
+        get
+        {
+            return ShowKillMessageCfg.Value;
+        }
+        set
+        {
+            ShowKillMessageCfg.Value = value;
+        }
+    }
+
+    internal bool OnlyShowLocalKillMessage
+    {
+        get
+        {
+            return OnlyShowLocalKillMessageCfg.Value;
+        }
+        set
+        {
+            OnlyShowLocalKillMessageCfg.Value = value;
         }
     }
 
@@ -94,10 +120,22 @@ internal class ConfigManager
         );
 
         // Damage Settings
-        ShowDamageTextCfg = config.Bind(
-            new ConfigDefinition("Damage Settings", "showDamageText"),
+        ShowDamageMessageCfg = config.Bind(
+            new ConfigDefinition("Damage Settings", "showDamageMessage"),
             true,
-            new ConfigDescription("Shows how much damage you did.")
+            new ConfigDescription("Shows a message of how much damage you did to an enemy.")
+        );
+
+        ShowKillMessageCfg = config.Bind(
+            new ConfigDefinition("Damage Settings", "showKillMessage"),
+            true,
+            new ConfigDescription("Shows a message when an enemy is killed.")
+        );
+
+        OnlyShowLocalKillMessageCfg = config.Bind(
+            new ConfigDefinition("Damage Settings", "onlyShowLocalKillMessage"),
+            false,
+            new ConfigDescription("Will only show your kill messages.")
         );
     }
 }

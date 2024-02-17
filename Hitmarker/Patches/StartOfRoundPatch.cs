@@ -10,5 +10,6 @@ internal class StartOfRoundPatch
     static void StartPatch()
     {
         HitmarkerBase.Instance.SpawnCanvas();
+        EnemyAIPatch.Initialize();
     }
 }

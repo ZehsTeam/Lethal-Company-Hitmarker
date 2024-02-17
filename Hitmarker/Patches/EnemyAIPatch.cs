@@ -1,22 +1,108 @@
-﻿using HarmonyLib;
+﻿using GameNetcodeStuff;
+using HarmonyLib;
+using System.Collections.Generic;
+using Unity.Netcode;
 
 namespace com.github.zehsteam.Hitmarker.Patches;
 
 [HarmonyPatch(typeof(EnemyAI))]
 internal class EnemyAIPatch
 {
-    [HarmonyPatch("HitEnemyOnLocalClient")]
-    [HarmonyPrefix]
-    static void HitEnemyOnLocalClientPatch(ref EnemyAI __instance, int force)
+    private static List<string> deadEnemyIDs;
+
+    public static void Initialize()
     {
-        ShowHitmarker(__instance, force);
+        deadEnemyIDs = new List<string>();
     }
 
-    private static void ShowHitmarker(EnemyAI enemyAI, int damage)
+    [HarmonyPatch("HitEnemyOnLocalClient")]
+    [HarmonyPrefix]
+    static void HitEnemyOnLocalClientPatch(ref EnemyAI __instance, PlayerControllerB playerWhoHit, int force)
     {
-        if (enemyAI.isEnemyDead) return;
+        bool fromLocalPlayer = StartOfRound.Instance.localPlayerController == playerWhoHit;
 
-        CanvasBehaviour.Instance.ShowHitmarker();
-        CanvasBehaviour.Instance.ShowDamageText(enemyAI.enemyType.enemyName, damage);
+        if (fromLocalPlayer)
+        {
+            HitmarkerBase.mls.LogInfo($"\n\n[LOCAL] HitEnemyOnLocalClient();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+
+            HitEnemy(__instance, playerWhoHit, force, true);
+        }
+        else
+        {
+            string username = playerWhoHit == null ? "NULL" : playerWhoHit.playerUsername;
+            HitmarkerBase.mls.LogWarning($"\n\n[LOCAL] HitEnemyOnLocalClient();\nplayerWhoHit: {username}\nNOT FROM LOCAL PLAYER! WHY WAS THIS CALLED?\n");
+        }
+    }
+
+    [HarmonyPatch("HitEnemyServerRpc")]
+    [HarmonyPrefix]
+    static void HitEnemyServerRpcPatch(ref EnemyAI __instance, int playerWhoHit, int force)
+    {
+        PlayerControllerB playerWhoHitScript = StartOfRound.Instance.allPlayerScripts[playerWhoHit];
+        bool fromLocalPlayer = StartOfRound.Instance.localPlayerController == playerWhoHitScript;
+
+        if (!fromLocalPlayer)
+        {
+            HitmarkerBase.mls.LogInfo($"\n\n[SERVER] HitEnemyServerRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+
+            HitEnemy(__instance, playerWhoHitScript, force, false);
+        }
+    }
+
+    [HarmonyPatch("HitEnemyClientRpc")]
+    [HarmonyPrefix]
+    static void HitEnemyClientRpcPatch(ref EnemyAI __instance, int playerWhoHit, int force)
+    {
+        bool isHostOrServer = NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
+
+        PlayerControllerB playerWhoHitScript = StartOfRound.Instance.allPlayerScripts[playerWhoHit];
+        bool fromLocalPlayer = StartOfRound.Instance.localPlayerController == playerWhoHitScript;
+
+        if (!isHostOrServer && !fromLocalPlayer)
+        {
+            HitmarkerBase.mls.LogInfo($"\n\n[CLIENT] HitEnemyClientRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+
+            HitEnemy(__instance, playerWhoHitScript, force, false);
+        }
+    }
+
+    private static void HitEnemy(EnemyAI enemyAI, PlayerControllerB playerWhoHit, int damage, bool fromLocalPlayer)
+    {
+        if (playerWhoHit == null) return;
+        if (enemyAI.enemyHP <= 0) return;
+        if (!enemyAI.enemyType.canDie) return;
+
+        string enemyId = GetEnemyID(enemyAI);
+        if (deadEnemyIDs.Contains(enemyId)) return;
+
+        string enemyName = enemyAI.enemyType.enemyName;
+        bool killedEnemy = enemyAI.enemyHP - damage <= 0;
+
+        if (fromLocalPlayer)
+        {
+            CanvasBehaviour.Instance.ShowHitmarker(killedEnemy);
+            CanvasBehaviour.Instance.ShowDamageText($"{enemyName} -{damage} HP");
+        }
+
+        if (killedEnemy)
+        {
+            deadEnemyIDs.Add(enemyId);
+
+            string playerUsername = fromLocalPlayer ? string.Empty : playerWhoHit.playerUsername;
+            string message = $"{playerUsername} killed {enemyName}".Trim();
+
+            CanvasBehaviour.Instance.ShowKillText(message, fromLocalPlayer);
+        }
+    }
+
+    private static string GetEnemyID(EnemyAI enemyAI)
+    {
+        NetworkObject networkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
+
+        string enemyName = enemyAI.enemyType.enemyName;
+        string instanceID = enemyAI.gameObject.GetInstanceID().ToString();
+        string networkObjectId = networkObject.NetworkObjectId.ToString();
+
+        return $"{enemyName}_{instanceID}_{networkObjectId}";
     }
 }

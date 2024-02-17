@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +8,8 @@ internal class CanvasBehaviour : MonoBehaviour
 {
     public static CanvasBehaviour Instance;
 
-    private Image image;
-    private Transform damageList;
+    private Image hitmarkerImage;
+    private Transform infoList;
 
     private void Awake()
     {
@@ -19,25 +18,25 @@ internal class CanvasBehaviour : MonoBehaviour
 
     private void Start()
     {
-        image = gameObject.GetComponentInChildren<Image>();
-        image.gameObject.SetActive(false);
+        hitmarkerImage = transform.GetChild(0).gameObject.GetComponent<Image>();
+        hitmarkerImage.gameObject.SetActive(false);
 
-        damageList = transform.GetChild(1);
+        infoList = transform.GetChild(1);
 
         SetHitmarkerImageSize(HitmarkerBase.Instance.configManager.HitmarkerImageSize);
     }
 
     public void SetHitmarkerImageSize(int size)
     {
-        image.rectTransform.sizeDelta = new Vector2(size, size);
+        hitmarkerImage.rectTransform.sizeDelta = new Vector2(size, size);
     }
 
-    public void ShowHitmarker()
+    public void ShowHitmarker(bool killed)
     {
         if (HitmarkerBase.Instance.configManager.ShowHitmarkerImage)
         {
             StopCoroutine("ShowImage");
-            StartCoroutine(ShowImage(0.3f));
+            StartCoroutine(ShowHitmarkerImage(0.3f, killed));
         }
 
         if (HitmarkerBase.Instance.configManager.PlayHitmarkerSound)
@@ -46,21 +45,48 @@ internal class CanvasBehaviour : MonoBehaviour
         }
     }
 
-    public void ShowDamageText(string name, int damage)
+    public void ShowDamageText(string message)
     {
-        if (!HitmarkerBase.Instance.configManager.ShowDamageText) return;
+        if (!HitmarkerBase.Instance.configManager.ShowDamageMessage) return;
 
-        GameObject damageText = Instantiate(HitmarkerBase.Instance.damageTextPrefab, Vector3.zero, Quaternion.identity, damageList);
-        DamageTextBehaviour damageTextBehaviour = damageText.GetComponent<DamageTextBehaviour>();
-        damageTextBehaviour.SetText($"{name} -{damage} HP");
+        ShowInfoText(message);
     }
 
-    private IEnumerator ShowImage(float time)
+    public void ShowKillText(string message, bool fromLocalPlayer)
     {
-        image.gameObject.SetActive(true);
+        if (!HitmarkerBase.Instance.configManager.ShowKillMessage) return;
+
+        bool onlyShowLocalKillText = HitmarkerBase.Instance.configManager.OnlyShowLocalKillMessage;
+        if (onlyShowLocalKillText && !fromLocalPlayer) return;
+
+        ShowInfoText(message, Color.red);
+    }
+
+    public void ShowInfoText(string message)
+    {
+        ShowInfoText(message, Color.white);
+    }
+
+    public void ShowInfoText(string message, Color color)
+    {
+        GameObject infoText = Instantiate(HitmarkerBase.Instance.infoTextPrefab, Vector3.zero, Quaternion.identity, infoList);
+        TextBehaviour textBehaviour = infoText.GetComponent<TextBehaviour>();
+
+        textBehaviour.SetText(message, color);
+    }
+
+    private IEnumerator ShowHitmarkerImage(float time, bool killed)
+    {
+        if (killed)
+        {
+            hitmarkerImage.color = Color.red;
+        }
+
+        hitmarkerImage.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(time);
 
-        image.gameObject.SetActive(false);
+        hitmarkerImage.gameObject.SetActive(false);
+        hitmarkerImage.color = Color.white;
     }
 }

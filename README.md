@@ -1,8 +1,9 @@
 # Hitmaker
 Shows a hitmarker when you successfully hit an enemy. (Client-side)
 
-* Shows a hitmarker when you successfully hit an enemy or player.
-* Shows how much damage you did.
+* Shows a hitmarker when you successfully hit an enemy.
+* Shows a message of how much damage you did to an enemy.
+* Shows a message when you or another player kills an enemy.
 * Fully client side. (Works in vanilla lobbies)
 
 ## ![Download Icon](https://i.imgur.com/TpnrFSH.png) Download
@@ -10,6 +11,9 @@ Shows a hitmarker when you successfully hit an enemy. (Client-side)
 Download [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) on Thunderstore.
 
 ## Config Settings
+If you are experiencing any issues with config settings not working, try deleting the config file and regenerating it by launching the game.<br>
+*Reason: Config files from previous versions might have different categories and keys.*
+
 | Hitmarker Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | `showHitmarkerImage` | `Boolean` | `true` | Do you want to show the hitmarker image? |
@@ -18,7 +22,9 @@ Download [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/)
 
 | Damage Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `showDamageText` | `Boolean` | `true` | Shows how much damage you did. |
+| `showDamageMessage` | `Boolean` | `true` | Shows a message of how much damage you did to an enemy. |
+| `showKillMessage` | `Boolean` | `true` | Shows a message when an enemy is killed. |
+| `onlyShowLocalKillMessage` | `Boolean` | `false` | Will only show your kill messages. |
 
 ## Bug Reports, Help, or Suggestions
 | Discord server | Channel | Post |
@@ -31,9 +37,11 @@ Download [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/)
 | ----------- | ----------- |
 | [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/) | Adds a few terminal commands to sell your scrap from the ship. |
 | [OnlyPresents](https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/) | Moons will only spawn gift boxes. (Server-side) |
+| [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) | Coil-Heads can sometimes spawn with a turret on their head. |
 
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/"><img src="https://i.imgur.com/I6W498g.png" width="80px"></a>
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/"><img src="https://i.imgur.com/pesSqHI.png" width="80px"></a>
+<a href="https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/"><img src="https://i.imgur.com/ZNcffJ7.png" width="80px"></a>
 
 ## Screenshots
-<img src="https://i.imgur.com/Nggpgn0.png" width="100%">
+<img src="https://i.imgur.com/lX6Cuql.png" width="100%">
