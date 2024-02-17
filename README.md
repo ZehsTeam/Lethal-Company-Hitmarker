@@ -1,5 +1,5 @@
 # Hitmaker
-Shows a hitmarker when you successfully hit an enemy. (Client-side)
+Shows a hitmarker when you successfully hit an enemy. Now with damage and kill messages. (Client-side)
 
 * Shows a hitmarker when you successfully hit an enemy.
 * Shows a message of how much damage you did to an enemy.
