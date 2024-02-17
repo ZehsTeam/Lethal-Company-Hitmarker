@@ -23,14 +23,9 @@ internal class EnemyAIPatch
 
         if (fromLocalPlayer)
         {
-            HitmarkerBase.mls.LogInfo($"\n\n[LOCAL] HitEnemyOnLocalClient();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+            HitmarkerBase.mls.LogInfo($"[LOCAL] HitEnemyOnLocalClient();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)");
 
             HitEnemy(__instance, playerWhoHit, force, true);
-        }
-        else
-        {
-            string username = playerWhoHit == null ? "NULL" : playerWhoHit.playerUsername;
-            HitmarkerBase.mls.LogWarning($"\n\n[LOCAL] HitEnemyOnLocalClient();\nplayerWhoHit: {username}\nNOT FROM LOCAL PLAYER! WHY WAS THIS CALLED?\n");
         }
     }
 
@@ -43,7 +38,7 @@ internal class EnemyAIPatch
 
         if (!fromLocalPlayer)
         {
-            HitmarkerBase.mls.LogInfo($"\n\n[SERVER] HitEnemyServerRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+            HitmarkerBase.mls.LogInfo($"[SERVER] HitEnemyServerRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)");
 
             HitEnemy(__instance, playerWhoHitScript, force, false);
         }
@@ -60,7 +55,7 @@ internal class EnemyAIPatch
 
         if (!isHostOrServer && !fromLocalPlayer)
         {
-            HitmarkerBase.mls.LogInfo($"\n\n[CLIENT] HitEnemyClientRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)\n");
+            HitmarkerBase.mls.LogInfo($"[CLIENT] HitEnemyClientRpc();\n{__instance.enemyType.enemyName} ({__instance.enemyHP - force} HP)");
 
             HitEnemy(__instance, playerWhoHitScript, force, false);
         }
