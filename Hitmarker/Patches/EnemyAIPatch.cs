@@ -70,7 +70,7 @@ internal class EnemyAIPatch
         string enemyId = GetEnemyID(enemyAI);
         if (deadEnemyIDs.Contains(enemyId)) return;
 
-        string enemyName = enemyAI.enemyType.enemyName;
+        string enemyName = GetEnemyName(enemyAI);
         bool killedEnemy = enemyAI.enemyHP - damage <= 0;
 
         if (fromLocalPlayer)
@@ -86,6 +86,28 @@ internal class EnemyAIPatch
             string message = fromLocalPlayer ? $"Killed {enemyName}" : $"{playerWhoHit.playerUsername} Killed {enemyName}";
             CanvasBehaviour.Instance.ShowKillMessage(message.Trim(), fromLocalPlayer);
         }
+    }
+
+    private static string GetEnemyName(EnemyAI enemyAI)
+    {
+        string enemyName = enemyAI.enemyType.enemyName;
+
+        // Use original enemy names
+        if (HitmarkerBase.Instance.configManager.UseOriginalEnemyNames)
+        {
+            return enemyName;
+        }
+
+        // Use other enemy names
+        if (enemyName == "Centipede") return "Snare Flea";
+        if (enemyName == "Crawler") return "Thumper";
+        if (enemyName == "Girl") return "Ghost Girl";
+        if (enemyName == "Puffer") return "Spore Lizard";
+        if (enemyName == "Spring") return "Coil-Head";
+        if (enemyName == "Masked") return "Mimic";
+        if (enemyName == "Flowerman") return "Bracken";
+
+        return enemyName;
     }
 
     private static string GetEnemyID(EnemyAI enemyAI)

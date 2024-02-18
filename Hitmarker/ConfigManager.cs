@@ -10,7 +10,8 @@ internal class ConfigManager
     private ConfigEntry<int> HitmarkerImageSizeCfg;
     private ConfigEntry<bool> PlayHitmarkerSoundCfg;
 
-    // Damage Settings
+    // Message Settings
+    private ConfigEntry<bool> UseOriginalEnemyNamesCfg;
     private ConfigEntry<bool> ShowDamageMessageCfg;
     private ConfigEntry<bool> ShowKillMessageCfg;
     private ConfigEntry<bool> OnlyShowLocalKillMessageCfg;
@@ -54,7 +55,19 @@ internal class ConfigManager
         }
     }
 
-    // Damage Settings
+    // Message Settings
+    internal bool UseOriginalEnemyNames
+    {
+        get
+        {
+            return UseOriginalEnemyNamesCfg.Value;
+        }
+        set
+        {
+            UseOriginalEnemyNamesCfg.Value = value;
+        }
+    }
+
     internal bool ShowDamageMessage
     {
         get
@@ -119,21 +132,27 @@ internal class ConfigManager
             new ConfigDescription("Do you want to play the hitmarker sound?")
         );
 
-        // Damage Settings
+        // Message Settings
+        UseOriginalEnemyNamesCfg = config.Bind(
+            new ConfigDefinition("Message Settings", "useOriginalEnemyNames"),
+            true,
+            new ConfigDescription("Messages will use the original enemy names.\nExample: Bracken -> Flower Men")
+        );
+
         ShowDamageMessageCfg = config.Bind(
-            new ConfigDefinition("Damage Settings", "showDamageMessage"),
+            new ConfigDefinition("Message Settings", "showDamageMessage"),
             true,
             new ConfigDescription("Shows a message of how much damage you did to an enemy.")
         );
 
         ShowKillMessageCfg = config.Bind(
-            new ConfigDefinition("Damage Settings", "showKillMessage"),
+            new ConfigDefinition("Message Settings", "showKillMessage"),
             true,
             new ConfigDescription("Shows a message when an enemy is killed.")
         );
 
         OnlyShowLocalKillMessageCfg = config.Bind(
-            new ConfigDefinition("Damage Settings", "onlyShowLocalKillMessage"),
+            new ConfigDefinition("Message Settings", "onlyShowLocalKillMessage"),
             false,
             new ConfigDescription("Will only show your kill messages.")
         );

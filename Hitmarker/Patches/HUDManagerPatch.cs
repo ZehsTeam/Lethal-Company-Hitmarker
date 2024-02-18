@@ -2,14 +2,13 @@
 
 namespace com.github.zehsteam.Hitmarker.Patches;
 
-[HarmonyPatch(typeof(StartOfRound))]
-internal class StartOfRoundPatch
+[HarmonyPatch(typeof(HUDManager))]
+internal class HUDManagerPatch
 {
     [HarmonyPatch("Start")]
     [HarmonyPostfix]
     static void StartPatch()
     {
         HitmarkerBase.Instance.SpawnCanvas();
-        EnemyAIPatch.Initialize();
     }
 }

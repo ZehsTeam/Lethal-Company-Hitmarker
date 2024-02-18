@@ -4,7 +4,6 @@ using HarmonyLib;
 using UnityEngine;
 using com.github.zehsteam.Hitmarker.Patches;
 using UnityEngine.SceneManagement;
-using System;
 
 namespace com.github.zehsteam.Hitmarker;
 
@@ -29,36 +28,35 @@ public class HitmarkerBase : BaseUnityPlugin
         mls = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
         mls.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
-        harmony.PatchAll(typeof(StartOfRoundPatch));
+        harmony.PatchAll(typeof(RoundManagerPatch));
+        harmony.PatchAll(typeof(HUDManagerPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
         configManager = new ConfigManager();
 
-        LoadAssetBundle();
+        LoadAssetsFromAssetBundle();
     }
 
-    private void LoadAssetBundle()
+    private void LoadAssetsFromAssetBundle()
     {
-        try
-        {
-            var dllFolderPath = System.IO.Path.GetDirectoryName(Info.Location);
-            var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
-            AssetBundle MainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+        var dllFolderPath = System.IO.Path.GetDirectoryName(Info.Location);
+        var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
+        AssetBundle MainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
 
-            canvasPrefab = (GameObject)MainAssetBundle.LoadAsset("HitmarkerCanvas");
-            canvasPrefab.AddComponent<CanvasBehaviour>();
+        canvasPrefab = (GameObject)MainAssetBundle.LoadAsset("HitmarkerCanvas");
+        canvasPrefab.AddComponent<CanvasBehaviour>();
 
-            hitSFX = (AudioClip)MainAssetBundle.LoadAsset("HitSFX");
+        hitSFX = MainAssetBundle.LoadAsset<AudioClip>("HitSFX");
 
-            messageTextPrefab = (GameObject)MainAssetBundle.LoadAsset("MessageText");
-            messageTextPrefab.AddComponent<TextBehaviour>();
+        messageTextPrefab = MainAssetBundle.LoadAsset<GameObject>("MessageText");
+        messageTextPrefab.AddComponent<TextBehaviour>();
 
-            mls.LogInfo("Successfully loaded assets from AssetBundle!");
-        }
-        catch (Exception e)
-        {
-            mls.LogError($"Failed to load assets from AssetBundle.\n\n{e}");
-        }
+        mls.LogInfo("Successfully loaded assets from AssetBundle!");
+    }
+
+    public void OnNewLevelLoaded(int randomMapSeed)
+    {
+        EnemyAIPatch.Initialize();
     }
 
     public void SpawnCanvas()
