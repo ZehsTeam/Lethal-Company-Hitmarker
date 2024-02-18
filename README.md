@@ -20,8 +20,9 @@ If you are experiencing any issues with config settings not working, try deletin
 | `hitmarkerImageSize` | `Int32` | `40` | The size of the hitmarker image in pixels. |
 | `playHitmarkerSound` | `Boolean` | `true` | Do you want to play the hitmarker sound? |
 
-| Damage Settings | Setting type | Default value | Description |
+| Message Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
+| `useOriginalEnemyNames` | `Boolean` | `true` | Messages will use the original enemy names. |
 | `showDamageMessage` | `Boolean` | `true` | Shows a message of how much damage you did to an enemy. |
 | `showKillMessage` | `Boolean` | `true` | Shows a message when an enemy is killed. |
 | `onlyShowLocalKillMessage` | `Boolean` | `false` | Will only show your kill messages. |

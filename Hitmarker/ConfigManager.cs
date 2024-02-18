@@ -136,7 +136,7 @@ internal class ConfigManager
         UseOriginalEnemyNamesCfg = config.Bind(
             new ConfigDefinition("Message Settings", "useOriginalEnemyNames"),
             true,
-            new ConfigDescription("Messages will use the original enemy names.\nExample: Bracken -> Flower Men")
+            new ConfigDescription("Messages will use the original enemy names.")
         );
 
         ShowDamageMessageCfg = config.Bind(
