@@ -1,8 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using HarmonyLib;
-using UnityEngine;
 using com.github.zehsteam.Hitmarker.Patches;
+using HarmonyLib;
+using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace com.github.zehsteam.Hitmarker;
@@ -39,19 +40,26 @@ public class HitmarkerBase : BaseUnityPlugin
 
     private void LoadAssetsFromAssetBundle()
     {
-        var dllFolderPath = System.IO.Path.GetDirectoryName(Info.Location);
-        var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
-        AssetBundle MainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+        try
+        {
+            var dllFolderPath = System.IO.Path.GetDirectoryName(Info.Location);
+            var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
+            AssetBundle MainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
 
-        canvasPrefab = (GameObject)MainAssetBundle.LoadAsset("HitmarkerCanvas");
-        canvasPrefab.AddComponent<CanvasBehaviour>();
+            canvasPrefab = MainAssetBundle.LoadAsset<GameObject>("HitmarkerCanvas");
+            canvasPrefab.AddComponent<CanvasBehaviour>();
 
-        hitSFX = MainAssetBundle.LoadAsset<AudioClip>("HitSFX");
+            hitSFX = MainAssetBundle.LoadAsset<AudioClip>("HitSFX");
 
-        messageTextPrefab = MainAssetBundle.LoadAsset<GameObject>("MessageText");
-        messageTextPrefab.AddComponent<TextBehaviour>();
+            messageTextPrefab = MainAssetBundle.LoadAsset<GameObject>("MessageText");
+            messageTextPrefab.AddComponent<TextBehaviour>();
 
-        mls.LogInfo("Successfully loaded assets from AssetBundle!");
+            mls.LogInfo("Successfully loaded assets from AssetBundle!");
+        }
+        catch (Exception e)
+        {
+            mls.LogError($"Error: Failed to load assets from AssetBundle.\n\n{e}");
+        }
     }
 
     public void OnNewLevelLoaded(int randomMapSeed)
