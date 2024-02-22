@@ -25,7 +25,7 @@ If you are experiencing any issues with config settings not working, try deletin
 | `useOriginalEnemyNames` | `Boolean` | `true` | Messages will use the original enemy names. |
 | `showDamageMessage` | `Boolean` | `true` | Shows a message of how much damage you did to an enemy. |
 | `showKillMessage` | `Boolean` | `true` | Shows a message when an enemy is killed. |
-| `onlyShowLocalKillMessage` | `Boolean` | `false` | Will only show your kill messages. |
+| `onlyShowLocalKillMessage` | `Boolean` | `true` | Will only show your kill messages. |
 
 ## Bug Reports, Help, or Suggestions
 https://github.com/ZehsTeam/Lethal-Company-Hitmarker/issues
