@@ -153,7 +153,7 @@ internal class ConfigManager
 
         OnlyShowLocalKillMessageCfg = config.Bind(
             new ConfigDefinition("Message Settings", "onlyShowLocalKillMessage"),
-            false,
+            true,
             new ConfigDescription("Will only show your kill messages.")
         );
     }

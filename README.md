@@ -1,12 +1,12 @@
 # Hitmaker
-Shows a hitmarker when you successfully hit an enemy. Now with damage and kill messages. (Client-side)
+Shows a hitmarker when you successfully hit an enemy. With additional features. (Client-side)
 
 * Shows a hitmarker when you successfully hit an enemy.
 * Shows a message of how much damage you did to an enemy.
 * Shows a message when you or another player kills an enemy.
 * Fully client side. (Works in vanilla lobbies)
 
-## ![Download Icon](https://i.imgur.com/TpnrFSH.png) Download
+## <img src="https://i.imgur.com/TpnrFSH.png" width="20px"> Download
 
 Download [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) on Thunderstore.
 
