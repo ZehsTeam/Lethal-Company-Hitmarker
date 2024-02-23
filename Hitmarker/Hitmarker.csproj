@@ -8,7 +8,7 @@
 
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.1.4</Version>                                               <!-- PLUGIN_VERSION -->
+    <Version>1.1.5</Version>                                               <!-- PLUGIN_VERSION -->
     <Description>Shows a hitmarker when you successfully hit an enemy. (Client-side)</Description>
 
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
