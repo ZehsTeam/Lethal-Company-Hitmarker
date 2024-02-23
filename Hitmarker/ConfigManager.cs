@@ -11,6 +11,7 @@ internal class ConfigManager
     private ConfigEntry<bool> PlayHitmarkerSoundCfg;
 
     // Message Settings
+    private ConfigEntry<float> MessageDurationCfg;
     private ConfigEntry<bool> UseOriginalEnemyNamesCfg;
     private ConfigEntry<bool> ShowDamageMessageCfg;
     private ConfigEntry<bool> ShowKillMessageCfg;
@@ -56,6 +57,18 @@ internal class ConfigManager
     }
 
     // Message Settings
+    internal float MessageDuration
+    {
+        get
+        {
+            return MessageDurationCfg.Value;
+        }
+        set
+        {
+            MessageDurationCfg.Value = value;
+        }
+    }
+
     internal bool UseOriginalEnemyNames
     {
         get
@@ -133,6 +146,12 @@ internal class ConfigManager
         );
 
         // Message Settings
+        MessageDurationCfg = config.Bind(
+            new ConfigDefinition("Message Settings", "messageDuration"),
+            3f,
+            new ConfigDescription("The duration of messages in seconds.")
+        );
+
         UseOriginalEnemyNamesCfg = config.Bind(
             new ConfigDefinition("Message Settings", "useOriginalEnemyNames"),
             true,

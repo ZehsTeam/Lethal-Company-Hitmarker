@@ -22,6 +22,7 @@ If you are experiencing any issues with config settings not working, try deletin
 
 | Message Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
+| `messageDuration` | `Single` | `3` | The duration of messages in seconds. |
 | `useOriginalEnemyNames` | `Boolean` | `true` | Messages will use the original enemy names. |
 | `showDamageMessage` | `Boolean` | `true` | Shows a message of how much damage you did to an enemy. |
 | `showKillMessage` | `Boolean` | `true` | Shows a message when an enemy is killed. |

@@ -12,7 +12,9 @@ internal class TextBehaviour : MonoBehaviour
     {
         fadeOutAnimation = gameObject.GetComponent<Animation>();
 
-        StartCoroutine(FadeOutAndDestroy(3f));
+        float duration = HitmarkerBase.Instance.configManager.MessageDuration;
+
+        StartCoroutine(FadeOutAndDestroy(duration));
     }
 
     private IEnumerator FadeOutAndDestroy(float time)
@@ -21,7 +23,7 @@ internal class TextBehaviour : MonoBehaviour
 
         fadeOutAnimation.Play();
 
-        float length = fadeOutAnimation.clip.length + 0.5f;
+        float length = fadeOutAnimation.clip.length + 0.1f;
         yield return new WaitForSeconds(length);
 
         Destroy(gameObject);
