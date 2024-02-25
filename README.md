@@ -11,9 +11,6 @@ Shows a hitmarker when you successfully hit an enemy. With additional features. 
 Download [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) on Thunderstore.
 
 ## Config Settings
-If you are experiencing any issues with config settings not working, try deleting the config file and regenerating it by launching the game.<br>
-*Reason: Config files from previous versions might have different categories and keys.*
-
 | Hitmarker Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | `showHitmarkerImage` | `Boolean` | `true` | Do you want to show the hitmarker image? |
