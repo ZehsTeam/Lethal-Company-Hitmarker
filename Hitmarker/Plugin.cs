@@ -1,10 +1,9 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using com.github.zehsteam.Hitmarker.MonoBehaviours;
 using com.github.zehsteam.Hitmarker.Patches;
 using HarmonyLib;
-using System;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace com.github.zehsteam.Hitmarker;
 
@@ -18,62 +17,27 @@ public class HitmarkerBase : BaseUnityPlugin
 
     internal ConfigManager configManager;
 
-    public GameObject canvasPrefab;
-    public AudioClip hitSFX;
-    public GameObject messageTextPrefab;
-    
-    void Awake()
+    internal static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
+
+    private void Awake()
     {
         if (Instance == null) Instance = this;
 
         mls = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
         mls.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
-        harmony.PatchAll(typeof(RoundManagerPatch));
         harmony.PatchAll(typeof(HUDManagerPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
         configManager = new ConfigManager();
 
-        LoadAssetsFromAssetBundle();
+        Content.Load();
     }
 
-    private void LoadAssetsFromAssetBundle()
+    internal void SpawnHitmarkerCanvas()
     {
-        try
-        {
-            var dllFolderPath = System.IO.Path.GetDirectoryName(Info.Location);
-            var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
-            AssetBundle MainAssetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
+        if (HitmarkerCanvasBehaviour.Instance != null) return;
 
-            canvasPrefab = MainAssetBundle.LoadAsset<GameObject>("HitmarkerCanvas");
-            canvasPrefab.AddComponent<CanvasBehaviour>();
-
-            hitSFX = MainAssetBundle.LoadAsset<AudioClip>("HitSFX");
-
-            messageTextPrefab = MainAssetBundle.LoadAsset<GameObject>("MessageText");
-            messageTextPrefab.AddComponent<TextBehaviour>();
-
-            mls.LogInfo("Successfully loaded assets from AssetBundle!");
-        }
-        catch (Exception e)
-        {
-            mls.LogError($"Error: Failed to load assets from AssetBundle.\n\n{e}");
-        }
-    }
-
-    public void OnNewLevelLoaded(int randomMapSeed)
-    {
-        EnemyAIPatch.Initialize();
-    }
-
-    public void SpawnCanvas()
-    {
-        if (CanvasBehaviour.Instance != null) return;
-
-        GameObject canvas = Instantiate(canvasPrefab, Vector3.zero, Quaternion.identity);
-        SceneManager.MoveGameObjectToScene(canvas, SceneManager.GetActiveScene());
-
-        mls.LogInfo("Spawned HitmarkerCanvas.");
+        UnityEngine.Object.Instantiate(Content.hitmarkerCanvasPrefab);
     }
 }
