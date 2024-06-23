@@ -4,7 +4,7 @@ namespace com.github.zehsteam.Hitmarker;
 
 internal class Content
 {
-    public static GameObject hitmarkerCanvasPrefab;
+    public static GameObject HitmarkerCanvasPrefab;
 
     public static void Load()
     {
@@ -15,18 +15,17 @@ internal class Content
     {
         try
         {
-            var dllFolderPath = System.IO.Path.GetDirectoryName(HitmarkerBase.Instance.Info.Location);
+            var dllFolderPath = System.IO.Path.GetDirectoryName(Plugin.Instance.Info.Location);
             var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "hitmarker_assets");
             AssetBundle assetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
 
-            // NetworkHandler
-            hitmarkerCanvasPrefab = assetBundle.LoadAsset<GameObject>("HitmarkerCanvas");
+            HitmarkerCanvasPrefab = assetBundle.LoadAsset<GameObject>("HitmarkerCanvas");
 
-            HitmarkerBase.mls.LogInfo("Successfully loaded assets from AssetBundle!");
+            Plugin.logger.LogInfo("Successfully loaded assets from AssetBundle!");
         }
         catch (System.Exception e)
         {
-            HitmarkerBase.mls.LogError($"Error: failed to load assets from AssetBundle.\n\n{e}");
+            Plugin.logger.LogError($"Error: failed to load assets from AssetBundle.\n\n{e}");
         }
     }
 }

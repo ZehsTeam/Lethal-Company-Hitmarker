@@ -6,41 +6,45 @@ namespace com.github.zehsteam.Hitmarker.MonoBehaviours;
 
 public class MessageItemBehaviour : MonoBehaviour
 {
-    public TextMeshProUGUI textUGUI;
+    public TextMeshProUGUI TextUGUI;
+
+    private Coroutine _animationCoroutine;
 
     private void Start()
     {
-        StartCoroutine(PlayAnimation());
+        TextUGUI.fontSize = Plugin.ConfigManager.MessageFontSize.Value;
+    }
+
+    private void OnEnable()
+    {
+        if (_animationCoroutine != null)
+        {
+            StopCoroutine(_animationCoroutine);
+        }
+
+        _animationCoroutine = StartCoroutine(PlayAnimation());
+    }
+
+    private void OnDisable()
+    {
+        if (_animationCoroutine != null)
+        {
+            StopCoroutine(_animationCoroutine);
+        }
     }
 
     private IEnumerator PlayAnimation()
     {
-        yield return new WaitForSeconds(HitmarkerBase.Instance.configManager.MessageDuration);
-        yield return StartCoroutine(FadeOut(1f));
-        yield return null;
+        yield return new WaitForSeconds(Plugin.ConfigManager.MessageDuration.Value);
 
-        Destroy(gameObject);
-    }
+        float fadeOutDuration = 1f;
 
-    public void SetText(string text)
-    {
-        SetText(text, Color.white);
-    }
-
-    public void SetText(string text, Color color)
-    {
-        textUGUI.text = text;
-        textUGUI.color = color;
-    }
-
-    private IEnumerator FadeOut(float duration)
-    {
         SetAlpha(255f);
 
         float timer = 0f;
-        while (timer < duration)
+        while (timer < fadeOutDuration)
         {
-            float percent = (1f / duration) * timer;
+            float percent = 1f / fadeOutDuration * timer;
             float alpha = 255f + (0f - 255f) * percent;
 
             SetAlpha(alpha);
@@ -50,12 +54,28 @@ public class MessageItemBehaviour : MonoBehaviour
         }
 
         SetAlpha(0f);
+
+        yield return null;
+
+        gameObject.SetActive(false);
+    }
+
+    public void SetText(string text)
+    {
+        SetText(text, Color.white);
+    }
+
+    public void SetText(string text, Color color)
+    {
+        TextUGUI.text = text;
+        TextUGUI.color = color;
     }
 
     private void SetAlpha(float a)
     {
-        Color32 color = textUGUI.color;
+        a = Mathf.Clamp(a, 0f, 255f);
+        Color32 color = TextUGUI.color;
         color.a = (byte)a;
-        textUGUI.color = color;
+        TextUGUI.color = color;
     }
 }

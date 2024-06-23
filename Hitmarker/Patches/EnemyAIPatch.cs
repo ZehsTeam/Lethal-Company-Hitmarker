@@ -35,7 +35,7 @@ internal class EnemyAIPatch
     static void HitEnemyClientRpcPatch(ref EnemyAI __instance, int force, int playerWhoHit)
     {
         if (playerWhoHit == -1) return;
-        if (HitmarkerBase.IsHostOrServer) return;
+        if (Plugin.IsHostOrServer) return;
 
         PlayerControllerB playerWhoHitScript = Utils.GetPlayerScript(playerWhoHit);
         if (Utils.IsLocalPlayer(playerWhoHitScript)) return;
@@ -63,10 +63,10 @@ internal class EnemyAIPatch
             HitmarkerCanvasBehaviour.Instance.ShowKillMessage(enemyName, fromLocalPlayer, playerWhoHit.playerUsername);
         }
 
-        LogInfo("HitEnemy();", enemyAI, force, playerWhoHit);
+        LogInfoExtended("HitEnemy();", enemyAI, force, playerWhoHit);
     }
 
-    private static void LogInfo(string functionName, EnemyAI enemyAI, int force, PlayerControllerB playerWhoHit)
+    private static void LogInfoExtended(string functionName, EnemyAI enemyAI, int force, PlayerControllerB playerWhoHit)
     {
         NetworkObject networkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
 
@@ -76,6 +76,6 @@ internal class EnemyAIPatch
         message += $"Player \"{playerWhoHit.playerUsername}\"{localText} hit \"{enemyAI.enemyType.enemyName}\" for {force} force.\n";
         message += $"isEnemyDead: {enemyAI.isEnemyDead}, enemyHP: {enemyAI.enemyHP}, (new enemyHP should be {enemyAI.enemyHP - force})\n";
 
-        HitmarkerBase.mls.LogInfo($"\n\n{message.Trim()}\n");
+        Plugin.Instance.LogInfoExtended($"\n\n{message.Trim()}\n");
     }
 }

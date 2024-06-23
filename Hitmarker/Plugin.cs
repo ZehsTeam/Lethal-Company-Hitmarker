@@ -4,18 +4,19 @@ using com.github.zehsteam.Hitmarker.MonoBehaviours;
 using com.github.zehsteam.Hitmarker.Patches;
 using HarmonyLib;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace com.github.zehsteam.Hitmarker;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class HitmarkerBase : BaseUnityPlugin
+internal class Plugin : BaseUnityPlugin
 {
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-    internal static HitmarkerBase Instance;
-    internal static ManualLogSource mls;
+    internal static Plugin Instance;
+    internal static ManualLogSource logger;
 
-    internal ConfigManager configManager;
+    internal static ConfigManager ConfigManager;
 
     internal static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 
@@ -23,21 +24,31 @@ public class HitmarkerBase : BaseUnityPlugin
     {
         if (Instance == null) Instance = this;
 
-        mls = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
-        mls.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
+        logger = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
+        logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
         harmony.PatchAll(typeof(HUDManagerPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
-        configManager = new ConfigManager();
+        ConfigManager = new ConfigManager();
 
         Content.Load();
     }
 
-    internal void SpawnHitmarkerCanvas()
+    public void CreateHitmarkerCanvas()
     {
         if (HitmarkerCanvasBehaviour.Instance != null) return;
 
-        UnityEngine.Object.Instantiate(Content.hitmarkerCanvasPrefab);
+        Object.Instantiate(Content.HitmarkerCanvasPrefab);
+
+        Plugin.logger.LogInfo("Instantiated Hitmarker canvas.");
+    }
+
+    public void LogInfoExtended(object data)
+    {
+        if (ConfigManager.ExtendedLogging.Value)
+        {
+            logger.LogInfo(data);
+        }
     }
 }

@@ -1,77 +1,60 @@
 ﻿using BepInEx.Configuration;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace com.github.zehsteam.Hitmarker;
 
 internal class ConfigManager
 {
-    // Hitmarker Settings
-    private ConfigEntry<bool> ShowHitmarkerImageCfg;
-    private ConfigEntry<int> HitmarkerImageSizeCfg;
-    private ConfigEntry<bool> PlayHitmarkerSoundCfg;
-
-    // Message Settings
-    private ConfigEntry<float> MessageDurationCfg;
-    private ConfigEntry<bool> ShowDamageMessageCfg;
-    private ConfigEntry<bool> ShowKillMessageCfg;
-    private ConfigEntry<bool> OnlyShowLocalKillMessageCfg;
+    // General Settings
+    public ConfigEntry<bool> ExtendedLogging { get; private set; }
 
     // Hitmarker Settings
-    internal bool ShowHitmarkerImage { get { return ShowHitmarkerImageCfg.Value; } set { ShowHitmarkerImageCfg.Value = value; } }
-    internal int HitmarkerImageSize { get { return HitmarkerImageSizeCfg.Value; } set { HitmarkerImageSizeCfg.Value = value; } }
-    internal bool PlayHitmarkerSound { get { return PlayHitmarkerSoundCfg.Value; } set { PlayHitmarkerSoundCfg.Value = value; } }
+    public ConfigEntry<bool> ShowHitmarkerImage { get; private set; }
+    public ConfigEntry<int> HitmarkerImageSize { get; private set; }
+    public ConfigEntry<bool> PlayHitmarkerSound { get; private set; }
 
     // Message Settings
-    internal float MessageDuration { get { return MessageDurationCfg.Value; } set { MessageDurationCfg.Value = value; } }
-    internal bool ShowDamageMessage { get { return ShowDamageMessageCfg.Value; } set { ShowDamageMessageCfg.Value = value; } }
-    internal bool ShowKillMessage { get { return ShowKillMessageCfg.Value; } set { ShowKillMessageCfg.Value = value; } }
-    internal bool OnlyShowLocalKillMessage { get { return OnlyShowLocalKillMessageCfg.Value; } set { OnlyShowLocalKillMessageCfg.Value = value; } }
+    public ConfigEntry<float> MessageDuration { get; private set; }
+    public ConfigEntry<int> MessageFontSize { get; private set; }
+    public ConfigEntry<bool> ShowDamageMessage { get; private set; }
+    public ConfigEntry<bool> ShowKillMessage { get; private set; }
+    public ConfigEntry<bool> OnlyShowLocalKillMessage { get; private set; }
 
     public ConfigManager()
     {
         BindConfigs();
+        ClearUnusedEntries();
     }
 
     private void BindConfigs()
     {
-        ConfigFile config = HitmarkerBase.Instance.Config;
+        ConfigFile configFile = Plugin.Instance.Config;
+
+        // General Settings
+        ExtendedLogging = configFile.Bind("General Settings", "ExtendedLogging", defaultValue: false, "Enable extended logging.");
 
         // Hitmarker Settings
-        ShowHitmarkerImageCfg = config.Bind(
-            new ConfigDefinition("Hitmarker Settings", "showHitmarkerImage"),
-            true,
-            new ConfigDescription("Do you want to show the hitmarker image?")
-        );
-        HitmarkerImageSizeCfg = config.Bind(
-            new ConfigDefinition("Hitmarker Settings", "hitmarkerImageSize"),
-            40,
-            new ConfigDescription("The size of the hitmarker image in pixels.")
-        );
-        PlayHitmarkerSoundCfg = config.Bind(
-            new ConfigDefinition("Hitmarker Settings", "playHitmarkerSound"),
-            true,
-            new ConfigDescription("Do you want to play the hitmarker sound?")
-        );
+        ShowHitmarkerImage = configFile.Bind("Hitmarker Settings", "ShowHitmarkerImage", defaultValue: true, "Do you want to show the hitmarker image?");
+        HitmarkerImageSize = configFile.Bind("Hitmarker Settings", "HitmarkerImageSize", defaultValue: 40, new ConfigDescription("The size of the hitmarker image in pixels.", new AcceptableValueRange<int>(10, 100)));
+        PlayHitmarkerSound = configFile.Bind("Hitmarker Settings", "PlayHitmarkerSound", defaultValue: true, "Do you want to play the hitmarker sound?");
 
         // Message Settings
-        MessageDurationCfg = config.Bind(
-            new ConfigDefinition("Message Settings", "messageDuration"),
-            3f,
-            new ConfigDescription("The duration of messages in seconds.")
-        );
-        ShowDamageMessageCfg = config.Bind(
-            new ConfigDefinition("Message Settings", "showDamageMessage"),
-            true,
-            new ConfigDescription("Shows a message of how much damage you did to an enemy.")
-        );
-        ShowKillMessageCfg = config.Bind(
-            new ConfigDefinition("Message Settings", "showKillMessage"),
-            true,
-            new ConfigDescription("Shows a message when an enemy is killed.")
-        );
-        OnlyShowLocalKillMessageCfg = config.Bind(
-            new ConfigDefinition("Message Settings", "onlyShowLocalKillMessage"),
-            true,
-            new ConfigDescription("Will only show your kill messages.")
-        );
+        MessageDuration = configFile.Bind("Message Settings", "MessageDuration", defaultValue: 4f, "The message duration in seconds.");
+        MessageFontSize = configFile.Bind("Message Settings", "MessageFontSize", defaultValue: 35, new ConfigDescription("The message font size in pixels.", new AcceptableValueRange<int>(10, 100)));
+        ShowDamageMessage = configFile.Bind("Message Settings", "ShowDamageMessage", defaultValue: true, "Shows a message of how much damage you did to an enemy.");
+        ShowKillMessage = configFile.Bind("Message Settings", "ShowKillMessage", defaultValue: true, "Shows a message when an enemy is killed.");
+        OnlyShowLocalKillMessage = configFile.Bind("Message Settings", "OnlyShowLocalKillMessage", defaultValue: true, "Will only show your kill messages.");
+    }
+
+    private void ClearUnusedEntries()
+    {
+        ConfigFile configFile = Plugin.Instance.Config;
+
+        // Normally, old unused config entries don't get removed, so we do it with this piece of code. Credit to Kittenji.
+        PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
+        var orphanedEntries = (Dictionary<ConfigDefinition, string>)orphanedEntriesProp.GetValue(configFile, null);
+        orphanedEntries.Clear(); // Clear orphaned entries (Unbinded/Abandoned entries)
+        configFile.Save(); // Save the config file to save these changes
     }
 }

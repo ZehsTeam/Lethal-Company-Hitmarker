@@ -9,6 +9,6 @@ internal class HUDManagerPatch
     [HarmonyPostfix]
     static void StartPatch()
     {
-        HitmarkerBase.Instance.SpawnHitmarkerCanvas();
+        Plugin.Instance.CreateHitmarkerCanvas();
     }
 }

@@ -6,30 +6,30 @@ namespace com.github.zehsteam.Hitmarker.MonoBehaviours;
 
 public class HitmarkerImageBehaviour : MonoBehaviour
 {
-    public Image image;
-    public Color32 defaultColor;
-    public Color32 killedColor;
+    public Image Image;
+    public Color32 DefaultColor;
+    public Color32 KilledColor;
 
-    private Coroutine fadeOutCoroutine;
+    private Coroutine _fadeOutCoroutine;
 
     private void Start()
     {
-        int size = HitmarkerBase.Instance.configManager.HitmarkerImageSize;
-        image.rectTransform.sizeDelta = new Vector2(size, size);
+        int size = Plugin.ConfigManager.HitmarkerImageSize.Value;
+        Image.rectTransform.sizeDelta = new Vector2(size, size);
 
         SetAlpha(0f);
     }
 
     public void ShowImage(bool killed = false)
     {
-        image.color = killed ? killedColor : defaultColor;
+        Image.color = killed ? KilledColor : DefaultColor;
 
-        if (fadeOutCoroutine != null)
+        if (_fadeOutCoroutine != null)
         {
-            StopCoroutine(fadeOutCoroutine);
+            StopCoroutine(_fadeOutCoroutine);
         }
 
-        fadeOutCoroutine = StartCoroutine(FadeOut(0.25f));
+        _fadeOutCoroutine = StartCoroutine(FadeOut(0.25f));
     }
 
     private IEnumerator FadeOut(float duration)
@@ -53,8 +53,9 @@ public class HitmarkerImageBehaviour : MonoBehaviour
 
     private void SetAlpha(float a)
     {
-        Color32 color = image.color;
+        a = Mathf.Clamp(a, 0f, 255f);
+        Color32 color = Image.color;
         color.a = (byte)a;
-        image.color = color;
+        Image.color = color;
     }
 }
