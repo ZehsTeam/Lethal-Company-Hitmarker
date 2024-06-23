@@ -1,4 +1,4 @@
-# Hitmaker
+# Hitmarker
 Shows a hitmarker when you successfully hit an enemy. With additional features. (Client-side)
 
 <ins><b>All features are configurable in the config settings.</b></ins>
